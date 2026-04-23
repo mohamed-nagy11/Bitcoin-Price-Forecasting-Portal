@@ -49,8 +49,28 @@ def format_prophet_columns(df, date_col, price_col):
 
 def parse_and_sort_dates(df):
     """Parses dates, handles corrupted rows, and sorts chronologically"""
-    df['ds'] = pd.to_datetime(df['ds'], errors='coerce')
+
+    # Handle numeric columns (Unix Timestamps)
+    if pd.api.types.is_numeric_dtype(df['ds']):
+        # If the max value is under 1 Billion, it's not a Unix timestamp
+        # Because Bitcoin was invented in 2009
+        if df['ds'].max() < 1e9:
+            raise ValueError(f"Invalid Date Column. You selected a non-date column.")
+        
+        # Parse it as Unix seconds
+        df['ds'] = pd.to_datetime(df['ds'], unit='s', errors='coerce')
+        
+    # Handle sring dates
+    else:
+        df['ds'] = pd.to_datetime(df['ds'], errors='coerce')
+        
     df = df.dropna(subset=['ds'])
+    
+    # More safety: Bitcoin did not exist before 2009
+    if df.empty or df['ds'].dt.year.max() < 2009:
+        raise ValueError("Invalid Date Column. \
+                        The parsed dates are before 2009 (Bitcoin was invented in 2009).")
+        
     return df.sort_values(by='ds')
 
 def fill_missing_days(df):
