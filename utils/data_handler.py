@@ -11,7 +11,7 @@ def load_csv(uploaded_file):
 
 def detect_date_column(df):
     """Automatically detects the timestamp column"""
-    common_date_names = ['date', 'timestamp', 'datetime', 'time']
+    common_date_names = ['date', 'timestamp', 'datetime', 'time', 'open time']
     
     for col in df.columns:
         if col.lower() in common_date_names:
