@@ -76,6 +76,13 @@ def process_data(df, date_col, price_col):
 def calculate_moving_averages(df):
     """Calculates 7-day and 30-day Simple Moving Averages"""
     df_tech = df.copy()
+
+    # Simple Moving Averages (SMA)
     df_tech['SMA_7'] = df_tech['y'].rolling(window=7).mean()
     df_tech['SMA_30'] = df_tech['y'].rolling(window=30).mean()
+
+    # Exponential Moving Averages (EMA)
+    df_tech['EMA_7'] = df_tech['y'].ewm(span=7, adjust=False).mean()
+    df_tech['EMA_30'] = df_tech['y'].ewm(span=30, adjust=False).mean()
+
     return df_tech
