@@ -1,6 +1,6 @@
 import streamlit as st
 from utils import data_handler, visualizer
-from models import prophet_model
+from models import prophet_model, arima_model
 
 st.title("BTC Price Forecast Portal")
 
@@ -26,6 +26,7 @@ if uploaded_file:
 
     # Model Parameters
     st.subheader("Forecast Parameters")
+    selected_model = st.selectbox("Select Forecasting Model", ["Prophet", "ARIMA"])
     horizon = st.slider("Forecast Horizon (Days)", min_value=7, max_value=90, value=30)
     confidence_interval = st.slider("Confidence Interval (%)", min_value=80, max_value=99, value=95)
     
@@ -48,24 +49,27 @@ if uploaded_file:
     }
 
     # Execution Pipeline
-    if st.button("Run Forecast Engine"):
-        with st.spinner("Cleaning data and running backtesting..."):
+    if st.button(f"Run {selected_model} Engine"):
+        with st.spinner(f"Cleaning data and training {selected_model}..."):
             
             try:
                 # Cleaning
                 clean_df = data_handler.process_data(raw_df, date_col, price_col)
-                
-                # Backtesting
-                mae, rmse = prophet_model.evaluate_prophet(clean_df, horizon)
-                
-                # Forecasting
-                forecast_df = prophet_model.forecast_prophet(clean_df, horizon, confidence_interval)
-                
+
+                # Backtesting and Forecasting
+                if selected_model == "Prophet":
+                    mae, rmse = prophet_model.evaluate_prophet(clean_df, horizon)
+                    forecast_df = prophet_model.forecast_prophet(clean_df, horizon, confidence_interval)
+                elif selected_model == "ARIMA":
+                    mae, rmse = arima_model.evaluate_arima(clean_df, horizon)
+                    forecast_df = arima_model.forecast_arima(clean_df, horizon, confidence_interval)
+
+                # Moving Averages
                 df_moving_avg = None
                 if any(active_moving_avg.values()):
                     df_moving_avg = data_handler.calculate_moving_averages(clean_df)
 
-                st.success("✅ Forecast Engine Execution Complete")
+                st.success(f"✅ {selected_model} Engine Execution Complete")
                 
                 # === Test Outputs ===
                 
@@ -79,7 +83,7 @@ if uploaded_file:
                 fig = visualizer.plot_forecast(
                     clean_df, 
                     forecast_df, 
-                    model_name="Prophet", 
+                    model_name=selected_model, 
                     df_moving_avg=df_moving_avg, 
                     active_moving_avg=active_moving_avg
                     )
