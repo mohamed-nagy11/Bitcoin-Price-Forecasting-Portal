@@ -68,6 +68,12 @@ elif uploaded_file and run_button:
             # Cleaning 
             clean_df = data_handler.process_data(raw_df, date_col, price_col)
 
+            # Check if there is enough data for forecasting
+            if len(clean_df) <= (horizon + 30):
+                st.error(f"❌ Not enough historical data")
+                st.warning(f"The models need more historical context")
+                st.stop()
+
             # Backtesting and Forecasting
             if selected_model == "Prophet":
                 mae, rmse = prophet_model.evaluate_prophet(clean_df, horizon)
