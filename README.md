@@ -7,6 +7,8 @@
 
 An interactive, end-to-end Machine Learning web application designed to forecast Bitcoin prices. This portal empowers users to upload historical BTC data, dynamically configure prediction parameters, and generate robust time-series forecasts with seamless visualizations.
 
+**Live Demo:** [https://bitcoin-price-forecast.streamlit.app/](https://bitcoin-price-forecast.streamlit.app/)
+
 ## Project Overview
 
 The Bitcoin Price Forecasting Portal is a comprehensive, production-ready Machine Learning pipeline tailored for time-series forecasting. It integrates advanced forecasting algorithms, specifically highlighting the use of **Facebook Prophet** for capturing complex seasonal trends and **ARIMA** (AutoRegressive Integrated Moving Average) for dynamic statistical modeling. Built with a focus on data science best practices, it provides an intuitive interface for both exploratory data analysis and reliable future predictions.
@@ -36,6 +38,8 @@ Bitcoin-Price-Forecasting-Portal
 ```
 
 ## Installation & Setup
+
+> **Note on Performance & File Limits:** While a live web demo is available, running the application locally is highly recommended. The free cloud hosting environment has memory limitations. Uploading large CSV files combined with the mathematical computations of the ARIMA and Prophet models may cause the hosted server to time out or crash.
 
 To run this application locally, ensure you have Python installed, then follow these steps:
 
