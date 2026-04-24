@@ -65,7 +65,12 @@ def fill_missing_days(df):
     
     df = df.drop_duplicates(subset=['ds'], keep='last')
     df.set_index('ds', inplace=True)
-    df = df.resample('D').ffill()
+
+    df = df.resample('D').asfreq() 
+    
+    df['y'] = df['y'].ffill()
+    df['y'] = df['y'].bfill()   # just in case the first day is a NaN
+    
     df.reset_index(inplace=True)
     return df
 
