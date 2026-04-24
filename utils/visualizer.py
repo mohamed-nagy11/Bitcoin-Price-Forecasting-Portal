@@ -65,6 +65,14 @@ def plot_forecast(historical_df, forecast_df, model_name="Prophet", df_moving_av
         line=dict(color='blue', width=2, dash='dash')
     ))
 
+    # Vertical line separator
+    fig.add_vline(
+        x=historical_df['ds'].iloc[-1],
+        line_width=1,
+        line_dash="dash",
+        line_color="rgba(255,255,255,0.8)",
+    )
+
     fig.update_layout(
         title=f"Bitcoin Price Forecast ({model_name})",
         xaxis_title="Date",
