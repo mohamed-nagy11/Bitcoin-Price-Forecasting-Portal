@@ -11,13 +11,16 @@ if uploaded_file:
     # Data Processing
     raw_df = data_handler.load_csv(uploaded_file)
 
-    date_col = data_handler.detect_date_column(raw_df)
+    auto_detected_col = data_handler.detect_date_column(raw_df)
     
-    if date_col is None:
-        st.warning("⚠️ Could not automatically detect the Date column")
-        date_col = st.selectbox("Select the Date column manually", raw_df.columns)
+    if auto_detected_col and auto_detected_col in raw_df.columns:
+        default_index = list(raw_df.columns).index(auto_detected_col)
+        st.success(f"✅ Auto-detected Date column: **{auto_detected_col}**. You can override this below if incorrect.")
     else:
-        st.success(f"✅ Auto-detected Date column: **{date_col}**")
+        default_index = 0
+        st.warning("⚠️ Could not automatically detect the Date column")
+    
+    date_col = st.selectbox("Confirm or Select the Date Column", raw_df.columns, index=default_index)
         
     available_price_cols = data_handler.get_price_columns(raw_df, date_col)
     price_col = st.selectbox("Select Price Value to Forecast", available_price_cols)
