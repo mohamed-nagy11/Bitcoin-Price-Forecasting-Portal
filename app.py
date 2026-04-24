@@ -91,9 +91,10 @@ elif uploaded_file and run_button:
             
             st.subheader("Backtesting Metrics")
             
-            metric_col1, metric_col2 = st.columns(2)
-            metric_col1.metric("Mean Absolute Error (MAE)", f"${mae:,.2f}")
-            metric_col2.metric("Root Mean Squared Error (RMSE)", f"${rmse:,.2f}")
+            with st.container(border=True):
+                metric_col1, metric_col2 = st.columns(2)
+                metric_col1.metric("Mean Absolute Error (MAE)", f"${mae:,.2f}")
+                metric_col2.metric("Root Mean Squared Error (RMSE)", f"${rmse:,.2f}")
             
             st.subheader("Interactive Forecast Chart")
             
