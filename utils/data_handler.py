@@ -14,20 +14,7 @@ def detect_date_column(df):
     common_date_names = ['date', 'timestamp', 'datetime', 'time', 'open time']
     
     for col in df.columns:
-        if col.lower() in common_date_names:
-            return col
-            
-    raise ValueError("Could not automatically detect a Date or Timestamp column. \
-                    Please ensure your CSV has a column named 'Date' or 'Timestamp'.")
-
-def detect_date_column(df):
-    """
-    Attempts to automatically identify the timestamp column
-    Returns the column name if found, otherwise returns None
-    """
-    common_date_names = ['date', 'timestamp', 'datetime', 'time']
-    for col in df.columns:
-        if col.lower() in common_date_names:
+        if str(col).lower().strip() in common_date_names:
             return col
             
     return None
