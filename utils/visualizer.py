@@ -13,7 +13,7 @@ def plot_forecast(historical_df, forecast_df, model_name="Prophet", df_moving_av
         x=historical_df['ds'],
         y=historical_df['y'],
         mode='lines',
-        name='Historical Actual Price',
+        name='Historical Price',
         line=dict(color='red', width=2)
     ))
 
@@ -53,7 +53,7 @@ def plot_forecast(historical_df, forecast_df, model_name="Prophet", df_moving_av
         line=dict(color='rgba(255,255,255,0)'),
         hoverinfo="skip",
         showlegend=True,
-        name=f'{model_name} Confidence Interval'
+        name=f'{model_name} CI'
     ))
 
     # Future Forecast
@@ -61,7 +61,7 @@ def plot_forecast(historical_df, forecast_df, model_name="Prophet", df_moving_av
         x=forecast_df['ds'], 
         y=forecast_df['yhat'],
         mode='lines',
-        name=f'{model_name} Predicted Price',
+        name=f'{model_name} Forecast',
         line=dict(color='blue', width=2, dash='dash')
     ))
 
