@@ -1,10 +1,10 @@
 import plotly.graph_objects as go
 import streamlit as st
 
-def plot_forecast(historical_df, forecast_df, model_name="Prophet"):
+def plot_forecast(historical_df, forecast_df, model_name="Prophet", df_moving_avg=None, active_moving_avg=None):
     """
     Generates an interactive Plotly chart for historical data, 
-    future forecast, and confidence intervals
+    future forecast, confidence intervals, and optional moving average
     """
     fig = go.Figure()
 
@@ -16,6 +16,33 @@ def plot_forecast(historical_df, forecast_df, model_name="Prophet"):
         name='Historical Actual Price',
         line=dict(color='red', width=2)
     ))
+
+    # Moving Averages (Optional)
+    if df_moving_avg is not None and active_moving_avg is not None:
+        if active_moving_avg.get('SMA_7'):
+            fig.add_trace(go.Scatter(
+                x=df_moving_avg['ds'], y=df_moving_avg['SMA_7'], 
+                mode='lines', name='7-Day SMA', 
+                line=dict(color='magenta', width=1.5)
+                ))
+        if active_moving_avg.get('SMA_30'):
+            fig.add_trace(go.Scatter(
+                x=df_moving_avg['ds'], y=df_moving_avg['SMA_30'], 
+                mode='lines', name='30-Day SMA', 
+                line=dict(color='turquoise', width=1.5)
+                ))
+        if active_moving_avg.get('EMA_7'):
+            fig.add_trace(go.Scatter(
+                x=df_moving_avg['ds'], y=df_moving_avg['EMA_7'], 
+                mode='lines', name='7-Day EMA', 
+                line=dict(color="rgba(218, 165, 32, 1)", width=1.5)
+                ))
+        if active_moving_avg.get('EMA_30'):
+            fig.add_trace(go.Scatter(
+                x=df_moving_avg['ds'], y=df_moving_avg['EMA_30'], 
+                mode='lines', name='30-Day EMA', 
+                line=dict(color="rgba(138, 43, 226, 1)", width=1.5)
+                ))
 
     # Confidence Interval
     fig.add_trace(go.Scatter(
